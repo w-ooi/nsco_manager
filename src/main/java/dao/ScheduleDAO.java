@@ -401,4 +401,53 @@ public class ScheduleDAO {
 		// リストを返却
 		return memberList;
 	}
+
+	public List<Schedule> getScheduleByToday() throws SQLException {
+		List<Schedule> list = new ArrayList<Schedule>();
+		PreparedStatement st = null;
+
+		try {
+			// PreparedStatementの取得
+			st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=?");
+			
+			// 現在日の取得
+			Calendar calendar = Calendar.getInstance();
+	        java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
+			st.setDate(1, date);
+
+			// SQL文を発行
+			ResultSet rs = st.executeQuery();
+
+			LessonDAO lessonDao = new LessonDAO(con);
+			TimeFrameDAO timeFrameDao = new TimeFrameDAO(con);
+			InstructorDAO instructorDao = new InstructorDAO(con);
+
+			// 結果を参照
+			while (rs.next()) {
+				int scheduleCode = rs.getInt("schedule_code");
+				int lessonCode = rs.getInt("lesson_code");
+				Lesson lesson = lessonDao.getLesson(lessonCode);
+				String eventDate = rs.getDate("event_date").toString();
+				int timeFrameCode = rs.getInt("time_frame_code");
+				TimeFrame timeFrame = timeFrameDao.getTimeFrame(timeFrameCode);
+				int instructorCode = rs.getInt("instructor_code");
+				Instructor instructor = instructorDao.getInstructor(instructorCode);
+				String streamingId = rs.getString("streaming_id");
+				String streamingPass = rs.getString("streaming_pass");
+				int cancelFlag = rs.getInt("cancel_flag");
+
+				Schedule schedule = new Schedule(scheduleCode,lesson,eventDate,timeFrame,instructor,streamingId,streamingPass,cancelFlag);
+
+				list.add(schedule);
+			}
+		} finally {
+			// リソースの解放
+			if (st != null) {
+				st.close();
+			}
+		}
+
+		// リストを返却
+		return list;
+	}
 }

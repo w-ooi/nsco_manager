@@ -35,7 +35,7 @@ public class ScheduleSearchByLessonCategoryAction implements IAction {
         	HttpSession session = request.getSession(); 
 			session.setAttribute("scheduleList", scheduleList);
 			
-			nextPage = "outputCsv.jsp";
+			nextPage = (String)request.getAttribute("page");
 		}catch (SQLException e) {
 			throw new NSCOException(e.getMessage());
         }finally {

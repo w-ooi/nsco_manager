@@ -2,14 +2,21 @@ package action;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.Instructor;
+import beans.LessonCategory;
+import beans.Schedule;
+import beans.TimeFrame;
 import dao.ConnectionManager;
 import dao.InstructorDAO;
+import dao.LessonCategoryDAO;
+import dao.ScheduleDAO;
+import dao.TimeFrameDAO;
 import orgex.NSCOException;
 
 public class AuthenticationLoginAction implements IAction {
@@ -38,6 +45,22 @@ public class AuthenticationLoginAction implements IAction {
 				if(instructor.getFacility().getFacilityCode() == 0) {
 					nextPage = "headOfficeTop.jsp";
 				}else {
+		            // DAOクラスをインスタンス化
+		            LessonCategoryDAO lessonCategoryDao = new LessonCategoryDAO(con);
+		            TimeFrameDAO timeFrameDao = new TimeFrameDAO(con);
+		            ScheduleDAO scheduleDao = new ScheduleDAO(con);
+		            
+					//検索項目用
+					List<LessonCategory> lessonCategoryList = lessonCategoryDao.getAllLessonCategories();
+					List<Instructor> instructorList = instructorDao.getAllInstructors();
+					List<TimeFrame> timeFrameList = timeFrameDao.getAllTimeFrames();
+					List<Schedule> scheduleList = scheduleDao.getScheduleByToday();
+					
+					session.setAttribute("lessonCategoryList", lessonCategoryList);
+					session.setAttribute("instructorList", instructorList);
+					session.setAttribute("timeFrameList", timeFrameList);
+					session.setAttribute("todayScheduleList", scheduleList);
+
 					nextPage = "branchOfficeTop.jsp";
 				}
 			}

@@ -8,35 +8,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import beans.Schedule;
+import beans.Reserve;
 import dao.ConnectionManager;
-import dao.ScheduleDAO;
+import dao.ReserveDAO;
 import orgex.NSCOException;
 
-public class ScheduleSearchByTimeFrameAction implements IAction {
+public class ViewRegistrationAttendancePageAction implements IAction {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response) throws NSCOException {
 		String nextPage = "error.jsp";
 		Connection con = null;
-		List<Schedule> scheduleList = null;
+		List<Reserve> reserveList = null;
 		
 		try {
         	//データベース接続情報を取得
         	con = ConnectionManager.getConnection();
 
             // DAOクラスをインスタンス化
-        	ScheduleDAO scheduleDao = new ScheduleDAO(con);
-	
-			//検索項目用
-        	String strDate = request.getParameter("date");
-        	String code = request.getParameter("code");
-        	scheduleList = scheduleDao.getScheduleByTimeFrame(strDate, code, "headOffice");
+        	ReserveDAO reserveDao = new ReserveDAO(con);
+        	String code = (String)request.getParameter("scheduleCode");
+        	reserveList = reserveDao.getReserveBySchedule(code);
 			
-        	HttpSession session = request.getSession(); 
-			session.setAttribute("scheduleList", scheduleList);
+			HttpSession session = request.getSession();
+			session.setAttribute("reserveList", reserveList);
 			
-			nextPage = (String)request.getAttribute("page");
+			nextPage = "registrationAttendance.jsp";
 		}catch (SQLException e) {
 			throw new NSCOException(e.getMessage());
         }finally {
@@ -48,7 +45,7 @@ public class ScheduleSearchByTimeFrameAction implements IAction {
 				}
         	}
         }
-		
+
 		return nextPage;
 	}
 }

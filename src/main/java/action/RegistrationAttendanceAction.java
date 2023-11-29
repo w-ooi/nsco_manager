@@ -2,41 +2,49 @@ package action;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import beans.Schedule;
+import beans.Reserve;
 import dao.ConnectionManager;
-import dao.ScheduleDAO;
+import dao.ReserveDAO;
 import orgex.NSCOException;
 
-public class ScheduleSearchByTimeFrameAction implements IAction {
+public class RegistrationAttendanceAction implements IAction {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response) throws NSCOException {
 		String nextPage = "error.jsp";
 		Connection con = null;
-		List<Schedule> scheduleList = null;
+		
+		HttpSession session = request.getSession();
+		List<Reserve> reserveList = (ArrayList<Reserve>)session.getAttribute("reserveList");
+		
+		int cnt = 0;
+		for(Reserve reserve:reserveList) {
+			String radioValue = request.getParameter("data"+cnt);
+			if(radioValue == null || radioValue.equals("")) {
+				reserve.setAttendanceFlag(0);
+			}else {
+				reserve.setAttendanceFlag(Integer.parseInt(radioValue));
+			}
+		}
 		
 		try {
-        	//データベース接続情報を取得
+			//データベース接続情報を取得
         	con = ConnectionManager.getConnection();
 
             // DAOクラスをインスタンス化
-        	ScheduleDAO scheduleDao = new ScheduleDAO(con);
-	
-			//検索項目用
-        	String strDate = request.getParameter("date");
-        	String code = request.getParameter("code");
-        	scheduleList = scheduleDao.getScheduleByTimeFrame(strDate, code, "headOffice");
+        	ReserveDAO reserveDao = new ReserveDAO(con);
+			int intReseult = reserveDao.updateAttendance(reserveList);
 			
-        	HttpSession session = request.getSession(); 
-			session.setAttribute("scheduleList", scheduleList);
+			session.setAttribute("registrationSchedule", reserveList);
+			nextPage = "confirmRegistrationSchedule.jsp";
 			
-			nextPage = (String)request.getAttribute("page");
 		}catch (SQLException e) {
 			throw new NSCOException(e.getMessage());
         }finally {

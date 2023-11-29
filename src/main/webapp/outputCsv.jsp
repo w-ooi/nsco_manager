@@ -39,6 +39,7 @@
 <td style="width:50px;"><input type="submit" value="検索"></td></tr>
 </table>
 <input type="hidden" name="visit" value="lessonCategorySearch">
+<input type="hidden" name="page" value="outputCsv.jsp">
 </form>
 <br>
 <form action="fc" method="post">
@@ -55,6 +56,7 @@
 <td style="width:50px;"><input type="submit" value="検索"></td></tr>
 </table>
 <input type="hidden" name="visit" value="timeFrameSearch">
+<input type="hidden" name="page" value="outputCsv.jsp">
 </form>
 <br>
 <form action="fc" method="post">
@@ -71,6 +73,7 @@
 <td style="width:50px;"><input type="submit" value="検索"></td></tr>
 </table>
 <input type="hidden" name="visit" value="instructorSearch">
+<input type="hidden" name="page" value="outputCsv.jsp">
 </form>
 <hr>
 <div style="text-align:center;"><strong>検索結果</strong></div>
