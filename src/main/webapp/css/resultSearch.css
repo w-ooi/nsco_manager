@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+.result table {
+	margin:auto;
+	border: 1px solid;
+}
+
+.result td {
+	border: 1px solid;
+}
+
+.result th {
+	border: 1px solid;
+}
