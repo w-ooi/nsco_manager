@@ -16,12 +16,13 @@
 <table style="margin:auto;border-collapse:separate;border-spacing:20px;">
 <tr>
 <td><a href="index.jsp"><img src="images/logo1.png" width="30%" height="30%"></a></td>
+<td><form action="mfc" method="post"><input type="submit" value="ログアウト"><input type="hidden" name="visit" value="logout"></form></td>
 </tr>
 </table>
 </div>
 <div style="text-align:center;"><strong>スケジュール登録の確認</strong></div>
 <div style="text-align:center;">次のスケジュールを登録します</div>
-<form action="fc" method="post">
+<form action="mfc" method="post">
 <table style="margin:auto;border:1px solid;">
 <tr><td style="width:180px;text-align:right;"><strong>レッスン名</strong></td><td><%= schedule.getLesson().getLessonName() %></td></tr>
 <tr><td style="width:180px;text-align:right;"><strong>開催日</strong></td><td><%= schedule.getEventDate() %></td></tr>
@@ -35,7 +36,7 @@
 </form>
 <br>
 <div style="text-align:center;">
-<form action="fc" method="post">
+<form action="mfc" method="post">
 <input type="submit" value="スケジュール登録ページへ戻る">
 <input type="hidden" name="visit" value="registrationSchedulePage">
 </form>

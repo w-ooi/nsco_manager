@@ -35,7 +35,7 @@ public class ScheduleSearchByInstructorAction implements IAction {
         	HttpSession session = request.getSession(); 
 			session.setAttribute("scheduleList", scheduleList);
 			
-			nextPage = (String)request.getAttribute("page");
+			nextPage = (String)request.getParameter("page");
 		}catch (SQLException e) {
 			throw new NSCOException(e.getMessage());
         }finally {

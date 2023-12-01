@@ -20,7 +20,8 @@
 <div>
 <table style="margin:auto;border-collapse:separate;border-spacing:20px;">
 <tr>
-<td><a href="index.jsp"><img src="images/logo3.png" width="30%" height="30%"></a></td>
+<td><a href="index.jsp"><img src="images/logo1.png" width="30%" height="30%"></a></td>
+<td><form action="mfc" method="post"><input type="submit" value="ログアウト"><input type="hidden" name="visit" value="logout"></form></td>
 </tr>
 </table>
 </div>

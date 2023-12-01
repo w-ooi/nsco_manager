@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.Reserve;
+import beans.Schedule;
 import dao.ConnectionManager;
 import dao.ReserveDAO;
 import orgex.NSCOException;
@@ -27,6 +28,8 @@ public class RegistrationAttendanceAction implements IAction {
 		int cnt = 0;
 		for(Reserve reserve:reserveList) {
 			String radioValue = request.getParameter("data"+cnt);
+			cnt++;
+			
 			if(radioValue == null || radioValue.equals("")) {
 				reserve.setAttendanceFlag(0);
 			}else {
@@ -42,8 +45,10 @@ public class RegistrationAttendanceAction implements IAction {
         	ReserveDAO reserveDao = new ReserveDAO(con);
 			int intReseult = reserveDao.updateAttendance(reserveList);
 			
-			session.setAttribute("registrationSchedule", reserveList);
-			nextPage = "confirmRegistrationSchedule.jsp";
+			session.setAttribute("registrationAttendanceMessage", "出欠を登録しました");
+			session.setAttribute("reserveList", reserveList);
+			session.setAttribute("scheduleList", new ArrayList<Schedule>());
+			nextPage = "registrationAttendance.jsp";
 			
 		}catch (SQLException e) {
 			throw new NSCOException(e.getMessage());

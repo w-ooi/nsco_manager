@@ -234,171 +234,6 @@ public class ReserveDAO {
 		return intResult;
 	}
 
-	public List<Reserve> getReserveByInstructor(String code) throws SQLException {
-		ArrayList<Reserve> list = new ArrayList<Reserve>();
-		PreparedStatement st = null;
-
-		try {
-			// PreparedStatementの取得
-			st = con.prepareStatement("SELECT r.reserve_code,r.member_no,r.schedule_code,r.attendance_flag,r.cancel_flag,r.lesson_evaluation,r.instructor_evaluation "
-					+ "FROM reserve r INNER JOIN schedule s ON r.schedule_code = s.schedule_code "
-					+ "WHERE r.cancel_flag=0 AND s.cancel_flag=0 AND s.instructor_code=?");
-			st.setInt(1, Integer.parseInt(code));
-			
-			// SQL文を発行
-			ResultSet rs = st.executeQuery();
-
-			MemberDAO memberDao = new MemberDAO(con);
-			ScheduleDAO scheduleDao = new ScheduleDAO(con);
-			
-			// 結果を参照
-			while (rs.next()) {
-				int reserveCode = rs.getInt("reserve_code");
-				String memberNo = rs.getString("member_no");
-				Member member = memberDao.getMember(memberNo);
-				int scheduleCode = rs.getInt("schedule_code");
-				Schedule schedule = scheduleDao.getSchedule(scheduleCode);
-				int attendanceFlag = rs.getInt("attendance_flag");
-				int cancelFlag = rs.getInt("cancel_flag");
-				int lessonEvaluation = rs.getInt("lesson_evaluation");
-				int instructorEvaluation = rs.getInt("instructor_evaluation");
-
-				Reserve reserve = new Reserve(reserveCode, member, schedule, attendanceFlag, cancelFlag,
-						lessonEvaluation, instructorEvaluation);
-
-				list.add(reserve);
-				
-				//開催日の降順でソート
-				Collections.sort(list, new Comparator<Reserve>() {
-					@Override
-					public int compare(Reserve reserveFirst, Reserve reserveSecond) {
-
-						return reserveSecond.getSchedule().getEventDate().compareTo(reserveFirst.getSchedule().getEventDate());
-					}
-				});
-			}
-		} finally {
-			// リソースの解放
-			if (st != null) {
-				st.close();
-			}
-		}
-
-		// リストを返却
-		return list;
-	}
-
-	public List<Reserve> getReserveByLessonCategory(String code) throws SQLException {
-		ArrayList<Reserve> list = new ArrayList<Reserve>();
-		PreparedStatement st = null;
-
-		try {
-			// PreparedStatementの取得
-			st = con.prepareStatement("SELECT r.reserve_code,r.member_no,r.schedule_code,r.attendance_flag,r.cancel_flag,r.lesson_evaluation,r.instructor_evaluation " 
-					+ "FROM reserve r " 
-					+ "INNER JOIN schedule s ON r.schedule_code = s.schedule_code "
-					+ "INNER JOIN lesson l ON s.lesson_code = l.lesson_code "
-					+ "WHERE r.cancel_flag=0 AND s.cancel_flag=0 AND l.lesson_category_code=?");
-			st.setInt(1, Integer.parseInt(code));
-			
-			// SQL文を発行
-			ResultSet rs = st.executeQuery();
-
-			MemberDAO memberDao = new MemberDAO(con);
-			ScheduleDAO scheduleDao = new ScheduleDAO(con);
-			
-			// 結果を参照
-			while (rs.next()) {
-				int reserveCode = rs.getInt("reserve_code");
-				String memberNo = rs.getString("member_no");
-				Member member = memberDao.getMember(memberNo);
-				int scheduleCode = rs.getInt("schedule_code");
-				Schedule schedule = scheduleDao.getSchedule(scheduleCode);
-				int attendanceFlag = rs.getInt("attendance_flag");
-				int cancelFlag = rs.getInt("cancel_flag");
-				int lessonEvaluation = rs.getInt("lesson_evaluation");
-				int instructorEvaluation = rs.getInt("instructor_evaluation");
-
-				Reserve reserve = new Reserve(reserveCode, member, schedule, attendanceFlag, cancelFlag,
-						lessonEvaluation, instructorEvaluation);
-
-				list.add(reserve);
-				
-				//開催日の降順でソート
-				Collections.sort(list, new Comparator<Reserve>() {
-					@Override
-					public int compare(Reserve reserveFirst, Reserve reserveSecond) {
-
-						return reserveSecond.getSchedule().getEventDate().compareTo(reserveFirst.getSchedule().getEventDate());
-					}
-				});
-			}
-		} finally {
-			// リソースの解放
-			if (st != null) {
-				st.close();
-			}
-		}
-
-		// リストを返却
-		return list;
-	}
-
-	public List<Reserve> getReserveByTimeFrame(String code) throws SQLException {
-		ArrayList<Reserve> list = new ArrayList<Reserve>();
-		PreparedStatement st = null;
-
-		try {
-			// PreparedStatementの取得
-			st = con.prepareStatement("SELECT r.reserve_code,r.member_no,r.schedule_code,r.attendance_flag,r.cancel_flag,r.lesson_evaluation,r.instructor_evaluation "
-					+ "FROM reserve r "
-					+ "INNER JOIN schedule s ON r.schedule_code = s.schedule_code "
-					+ "WHERE r.cancel_flag=0 AND s.cancel_flag=0 AND s.time_frame_code=?");
-			st.setInt(1, Integer.parseInt(code));
-			
-			// SQL文を発行
-			ResultSet rs = st.executeQuery();
-
-			MemberDAO memberDao = new MemberDAO(con);
-			ScheduleDAO scheduleDao = new ScheduleDAO(con);
-			
-			// 結果を参照
-			while (rs.next()) {
-				int reserveCode = rs.getInt("reserve_code");
-				String memberNo = rs.getString("member_no");
-				Member member = memberDao.getMember(memberNo);
-				int scheduleCode = rs.getInt("schedule_code");
-				Schedule schedule = scheduleDao.getSchedule(scheduleCode);
-				int attendanceFlag = rs.getInt("attendance_flag");
-				int cancelFlag = rs.getInt("cancel_flag");
-				int lessonEvaluation = rs.getInt("lesson_evaluation");
-				int instructorEvaluation = rs.getInt("instructor_evaluation");
-
-				Reserve reserve = new Reserve(reserveCode, member, schedule, attendanceFlag, cancelFlag,
-						lessonEvaluation, instructorEvaluation);
-
-				list.add(reserve);
-				
-				//開催日の降順でソート
-				Collections.sort(list, new Comparator<Reserve>() {
-					@Override
-					public int compare(Reserve reserveFirst, Reserve reserveSecond) {
-
-						return reserveSecond.getSchedule().getEventDate().compareTo(reserveFirst.getSchedule().getEventDate());
-					}
-				});
-			}
-		} finally {
-			// リソースの解放
-			if (st != null) {
-				st.close();
-			}
-		}
-
-		// リストを返却
-		return list;
-	}
-
 	public List<Reserve> getReserveBySchedule(String code) throws SQLException {
 		ArrayList<Reserve> list = new ArrayList<Reserve>();
 		PreparedStatement st = null;
@@ -460,11 +295,11 @@ public class ReserveDAO {
 
 		try {
 			// PreparedStatementの取得
-			st = con.prepareStatement("UPDATE reserve SET attendance_flag=? WHERE member_no=?");
+			st = con.prepareStatement("UPDATE reserve SET attendance_flag=? WHERE reserve_code=?");
 			
 			for(Reserve reserve:reserveList) {
 				st.setInt(1, reserve.getAttendanceFlag());
-				st.setString(2, reserve.getMember().getMemberNo());
+				st.setInt(2, reserve.getReserveCode());
 
 				// SQL文を発行
 				int tmpResult = st.executeUpdate();

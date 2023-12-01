@@ -37,7 +37,7 @@ public class AuthenticationLoginAction implements IAction {
         	String loginId = request.getParameter("loginId");
         	String password = request.getParameter("password");
         	instructor = instructorDao.getInstructorByLoginId(loginId, password);
-
+        	
         	HttpSession session = request.getSession(); 
 			session.setAttribute("instructor", instructor);
 			

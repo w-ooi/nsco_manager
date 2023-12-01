@@ -17,12 +17,10 @@ import action.LogoutAction;
 import action.OutputCsvAction;
 import action.RegistrationAttendanceAction;
 import action.RegistrationScheduleAction;
-import action.ReserveSearchByInstructorAction;
-import action.ReserveSearchByLessonCategoryAction;
-import action.ReserveSearchByTimeFrameAction;
 import action.ScheduleSearchByInstructorAction;
 import action.ScheduleSearchByLessonCategoryAction;
 import action.ScheduleSearchByTimeFrameAction;
+import action.ViewBranchOfficeTopAction;
 import action.ViewCheckQuestionPageAction;
 import action.ViewHeadOfficeTopAction;
 import action.ViewOutputCsvPageAction;
@@ -88,20 +86,14 @@ public class FrontController extends HttpServlet {
 		case "checkQuestion":
 			action = new CheckQuestionAction();
 			break;
-		case "lessonCategorysearchReserve":
-			action = new ReserveSearchByLessonCategoryAction();
-			break;
-		case "timeFrameSearchReserve":
-			action = new ReserveSearchByTimeFrameAction();
-			break;
-		case "instructorSearchReserve":
-			action = new ReserveSearchByInstructorAction();
-			break;
 		case "registrationAttendancePage":
 			action = new ViewRegistrationAttendancePageAction();
 			break;
 		case "registrationAttendance":
 			action = new RegistrationAttendanceAction();
+			break;
+		case "branchOfficeTop":
+			action = new ViewBranchOfficeTopAction();
 			break;
 		}
 

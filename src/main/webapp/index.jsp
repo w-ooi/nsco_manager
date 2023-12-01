@@ -20,7 +20,7 @@
 <div style="text-align:center;"><strong>管理システム　ログイン</strong></div>
 <form action="mfc" method="post">
 <table style="margin:auto;border:1px solid;">
-<tr><td style="width:180px;text-align:right;"><strong>ログインID</strong></td><td><input type="text" name="logonId" required></td></tr>
+<tr><td style="width:180px;text-align:right;"><strong>ログインID</strong></td><td><input type="text" name="loginId" required></td></tr>
 <tr><td style="width:180px;text-align:right;"><strong>パスワード</strong></td><td><input type="password" name="password" required></td></tr>
 <tr><th colspan="2"><input type="submit" value="ログイン"></th></tr>
 </table>

@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>NatureSportsClub管理システム</title>
-<link rel="stylesheet" href="css/resultSearch.css">
 <%
 	List<LessonCategory> lessonCategoryList = (ArrayList<LessonCategory>)session.getAttribute("lessonCategoryList");
 	List<TimeFrame> timeFrameList = (ArrayList<TimeFrame>)session.getAttribute("timeFrameList");
@@ -21,19 +20,20 @@
 <table style="margin:auto;border-collapse:separate;border-spacing:20px;">
 <tr>
 <td><a href="index.jsp"><img src="images/logo1.png" width="30%" height="30%"></a></td>
+<td><form action="mfc" method="post"><input type="submit" value="ログアウト"><input type="hidden" name="visit" value="logout"></form></td>
 </tr>
 </table>
 </div>
 <div style="text-align:center;"><strong>本日のスケジュール</strong></div>
 <%
-	if(todayScheduleList.size() > 0){
+	if(todayScheduleList !=null && todayScheduleList.size() > 0){
 %>
 <div style="text-align:center;">(<%= todayScheduleList.size() %>件)</div>
 <%
 		for(Schedule schedule:todayScheduleList){
 			if(schedule.getCancelFlag() == 0){
 %>
-		<div class="result">
+		<div>
 		<form action="mfc" method="post">
 		<table style="margin:auto;border:1px solid;">
 			<tr><td style="width:180px;text-align:right;"><strong>レッスン名</strong></td><td style="width:600px"><%= schedule.getLesson().getLessonName() %></td></tr>
@@ -77,7 +77,7 @@
 <input type="hidden" name="page" value="branchOfficeTop.jsp">
 </form>
 <br>
-<form action="fc" method="post">
+<form action="mfc" method="post">
 <table style="margin:auto;border:1px solid;">
 <tr><td style="width:180px;text-align:right;"><strong>日時</strong></td><td style="width:150px;"><input type="date" name="date" required></td><td style="width:150px;"><select name="code">
 <%
@@ -94,7 +94,7 @@
 <input type="hidden" name="page" value="branchOfficeTop.jsp">
 </form>
 <br>
-<form action="fc" method="post">
+<form action="mfc" method="post">
 <table style="margin:auto;border:1px solid;">
 <tr><td style="width:180px;text-align:right;"><strong>インストラクター</strong></td><td colspan="2" style="width:300px;"><select name="code">
 <%
@@ -113,14 +113,14 @@
 <hr>
 <div style="text-align:center;"><strong>検索結果</strong></div>
 <%
-	if(scheduleList.size() > 0){
+	if(scheduleList != null && scheduleList.size() > 0){
 %>
 <div style="text-align:center;">(<%= scheduleList.size() %>件)</div>
 <%
 		for(Schedule schedule:scheduleList){
 			if(schedule.getCancelFlag() == 0){
 %>
-		<div class="result">
+		<div>
 		<form action="mfc" method="post">
 		<table style="margin:auto;border:1px solid;">
 			<tr><td style="width:180px;text-align:right;"><strong>レッスン名</strong></td><td style="width:600px"><%= schedule.getLesson().getLessonName() %></td></tr>
@@ -148,7 +148,7 @@
 <div style="text-align:center;">
 <form action="mfc" method="post">
 <input type="submit" value="トップページへ戻る">
-<input type="hidden" name="visit" value="headOfficeTop">
+<input type="hidden" name="visit" value="branchOfficeTop">
 </form>
 </div>
 </body>
