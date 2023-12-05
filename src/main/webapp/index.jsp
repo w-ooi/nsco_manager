@@ -30,9 +30,7 @@
 <%
 	if(authenticationMessage != null && !authenticationMessage.equals("")){
 %>
-		<br>
 		<div style="text-align:center;color:#ff0000;"><strong><%= authenticationMessage %></strong></div>
-		<br>
 <%
 		session.removeAttribute("authenticationMessage");
 	}

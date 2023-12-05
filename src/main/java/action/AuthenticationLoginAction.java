@@ -43,6 +43,7 @@ public class AuthenticationLoginAction implements IAction {
 			
 			if(instructor != null) {
 				if(instructor.getFacility().getFacilityCode() == 0) {
+					session.setAttribute("linkPage", "headOfficeTop.jsp");
 					nextPage = "headOfficeTop.jsp";
 				}else {
 		            // DAOクラスをインスタンス化
@@ -61,8 +62,12 @@ public class AuthenticationLoginAction implements IAction {
 					session.setAttribute("timeFrameList", timeFrameList);
 					session.setAttribute("todayScheduleList", scheduleList);
 
+					session.setAttribute("linkPage", "branchOfficeTop.jsp");
 					nextPage = "branchOfficeTop.jsp";
 				}
+			}else {
+				session.setAttribute("authenticationMessage", "ログインIDまたはパスワードが間違っています");
+				nextPage = "index.jsp";
 			}
 			
 		}catch (SQLException e) {
