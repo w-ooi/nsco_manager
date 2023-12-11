@@ -31,7 +31,7 @@ public class ScheduleSearchByTimeFrameAction implements IAction {
 			//検索項目用
         	String strDate = request.getParameter("date");
         	String code = request.getParameter("code");
-        	scheduleList = scheduleDao.getScheduleByTimeFrame(strDate, code, "headOffice");
+        	scheduleList = scheduleDao.getScheduleByTimeFrameForManager(strDate, code);
 			
         	HttpSession session = request.getSession(); 
 			session.setAttribute("scheduleList", scheduleList);

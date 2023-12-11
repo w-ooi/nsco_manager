@@ -30,7 +30,7 @@ public class ScheduleSearchByInstructorAction implements IAction {
 	
 			//検索項目用
         	String code = request.getParameter("code");
-        	scheduleList = scheduleDao.getScheduleByInstructor(code, "headOffice");
+        	scheduleList = scheduleDao.getScheduleByInstructorForManager(code);
 			
         	HttpSession session = request.getSession(); 
 			session.setAttribute("scheduleList", scheduleList);
