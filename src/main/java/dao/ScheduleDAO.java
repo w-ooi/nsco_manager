@@ -4,11 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import beans.Creca;
@@ -67,9 +64,8 @@ public class ScheduleDAO {
 		return schedule;
 	}
 	
-	private ArrayList<Schedule> checkDateSchedules(ArrayList<Schedule> list){
-		ArrayList<Schedule> newList = new ArrayList<Schedule>();
-		
+	// 利用者側のスケジュール検索用日付取得
+	private Calendar[] getCompDate(){
     	//現在日時を取得
 		Calendar clNow = Calendar.getInstance();
 
@@ -88,7 +84,7 @@ public class ScheduleDAO {
 		Calendar clCompEnd = (Calendar)clNow.clone();
 		
 		//18時以前なら翌日分より、後なら翌々日分より表示
-		if(nowHour <= 18) {	
+		if(nowHour < 18) {	
 			clCompStart.set(Calendar.DATE, nowDate+1);
 		}else {
 			clCompStart.set(Calendar.DATE, nowDate+2);
@@ -103,45 +99,27 @@ public class ScheduleDAO {
 			clCompEnd.set(Calendar.DATE, 1);
 		}
 
-		for(Schedule schedule : list) {
-			//文字型からCalendar型へ変換
-			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-			
-			// 文字列をDate型へ
-			Date eventDate = null;
-			try {
-				eventDate = sf.parse(schedule.getEventDate());
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-
-			// Dateをカレンダーへ
-			Calendar calendarDate = Calendar.getInstance();
-			calendarDate.setTime(eventDate);
-
-			//日時の比較
-			//戻り値が0なら一致、正なら現在日時が指定日時を過ぎている、負なら現在日時は指定日時より前
-			int diffStart = calendarDate.compareTo(clCompStart);
-			int diffEnd = calendarDate.compareTo(clCompEnd);
-
-		    if (diffStart >= 0 && diffEnd < 0){
-		    	newList.add(schedule);
-		    }
-		}
-		
-		return newList;
+		// 検索対象の開始日付と終了日付を返す
+		Calendar[] compDate = {clCompStart, clCompEnd};
+		return compDate;
 	}
 
 	public List<Schedule> getScheduleByLessonCategory(String code) throws SQLException {
 		ArrayList<Schedule> list = new ArrayList<Schedule>();
 		PreparedStatement st = null;
 
+		Calendar[] compDate = getCompDate();	// 検索対象の開始日付と終了日付
+
 		if(!code.equals("all")) {
 			// PreparedStatementの取得
-			st = con.prepareStatement("SELECT schedule_code,s.lesson_code,event_date,time_frame_code,instructor_code,streaming_id,streaming_pass,cancel_flag,lesson_category_code FROM schedule s INNER JOIN lesson l ON s.lesson_code=l.lesson_code WHERE l.lesson_category_code=?");
+			st = con.prepareStatement("SELECT schedule_code,s.lesson_code,event_date,time_frame_code,instructor_code,streaming_id,streaming_pass,cancel_flag,lesson_category_code FROM schedule s INNER JOIN lesson l ON s.lesson_code=l.lesson_code WHERE l.lesson_category_code=? AND event_date>=? AND event_date<?");
 			st.setString(1, code);
+			st.setDate(2, new java.sql.Date(compDate[0].getTime().getTime()));
+			st.setDate(3, new java.sql.Date(compDate[1].getTime().getTime()));
 		}else {
-			st = con.prepareStatement("SELECT * FROM schedule");
+			st = con.prepareStatement("SELECT * FROM schedule WHERE event_date>=? AND event_date<?");
+			st.setDate(1, new java.sql.Date(compDate[0].getTime().getTime()));
+			st.setDate(2, new java.sql.Date(compDate[1].getTime().getTime()));
 		}
 		
 		// SQL文を発行
@@ -171,27 +149,33 @@ public class ScheduleDAO {
 		}
 
 		// リストを返却
-		return checkDateSchedules(list);
+		return list;
 	}
-
+	
 	public List<Schedule> getScheduleByTimeFrame(String strDate, String code) throws SQLException {
 		ArrayList<Schedule> list = new ArrayList<Schedule>();
 		PreparedStatement st = null;
+		
+		Calendar[] compDate = getCompDate();	// 検索対象の開始日付と終了日付
 
 		try {
 			if(!code.equals("all")) {
 				int iCode = Integer.parseInt(code);
 
 				// PreparedStatementの取得
-				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND time_frame_code=?");
+				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND event_date>=? AND event_date<? AND time_frame_code=?");
 				
 				st.setDate(1, java.sql.Date.valueOf(strDate));
-				st.setInt(2, iCode);
+				st.setDate(2, new java.sql.Date(compDate[0].getTime().getTime()));
+				st.setDate(3, new java.sql.Date(compDate[1].getTime().getTime()));
+				st.setInt(4, iCode);
 			}else {
 				// PreparedStatementの取得
-				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=?");
+				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND event_date>=? AND event_date<?");
 				
 				st.setDate(1, java.sql.Date.valueOf(strDate));
+				st.setDate(2, new java.sql.Date(compDate[0].getTime().getTime()));
+				st.setDate(3, new java.sql.Date(compDate[1].getTime().getTime()));
 			}
 
 			// SQL文を発行
@@ -227,22 +211,28 @@ public class ScheduleDAO {
 		}
 
 		// リストを返却
-		return checkDateSchedules(list);
+		return list;
 	}
 
 	public List<Schedule> getScheduleByInstructor(String code) throws SQLException {
 		ArrayList<Schedule> list = new ArrayList<Schedule>();
 		PreparedStatement st = null;
+		
+		Calendar[] compDate = getCompDate();	// 検索対象の開始日付と終了日付
 
 		try {
 			if(!code.equals("all")) {
 				int iCode = Integer.parseInt(code);
 
 				// PreparedStatementの取得
-				st = con.prepareStatement("SELECT * FROM schedule WHERE instructor_code=?");
+				st = con.prepareStatement("SELECT * FROM schedule WHERE instructor_code=? AND event_date>=? AND event_date<?");
 				st.setInt(1, iCode);
+				st.setDate(2, new java.sql.Date(compDate[0].getTime().getTime()));
+				st.setDate(3, new java.sql.Date(compDate[1].getTime().getTime()));
 			}else {
-				st = con.prepareStatement("SELECT * FROM schedule");
+				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date>=? AND event_date<?");
+				st.setDate(1, new java.sql.Date(compDate[0].getTime().getTime()));
+				st.setDate(2, new java.sql.Date(compDate[1].getTime().getTime()));
 			}
 
 			// SQL文を発行
@@ -278,7 +268,7 @@ public class ScheduleDAO {
 		}
 
 		// リストを返却
-		return checkDateSchedules(list);
+		return list;
 	}
 
 	public List<Schedule> getScheduleByLessonCategoryForManager(String code) throws SQLException {
