@@ -28,4 +28,9 @@ public class Creca {
 	public void setCrecaCompName(String crecaCompName) {
 		this.crecaCompName = crecaCompName;
 	}
+
+	@Override
+	public String toString() {
+		return "Creca [crecaCompId=" + crecaCompId + ", crecaCompName=" + crecaCompName + "]";
+	}
 }

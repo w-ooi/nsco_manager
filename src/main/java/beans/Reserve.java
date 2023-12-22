@@ -79,4 +79,11 @@ public class Reserve {
 	public void setInstructorEvaluation(int instructorEvaluation) {
 		this.instructorEvaluation = instructorEvaluation;
 	}
+
+	@Override
+	public String toString() {
+		return "Reserve [reserveCode=" + reserveCode + ", member=" + member + ", schedule=" + schedule
+				+ ", attendanceFlag=" + attendanceFlag + ", cancelFlag=" + cancelFlag + ", lessonEvaluation="
+				+ lessonEvaluation + ", instructorEvaluation=" + instructorEvaluation + "]";
+	}
 }

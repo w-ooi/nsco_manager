@@ -69,4 +69,10 @@ public class Instructor {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	@Override
+	public String toString() {
+		return "Instructor [instructorCode=" + instructorCode + ", instructorName=" + instructorName + ", facility="
+				+ facility + ", imageFile=" + imageFile + ", loginId=" + loginId + ", password=" + password + "]";
+	}
 }

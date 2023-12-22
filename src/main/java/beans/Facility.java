@@ -28,4 +28,9 @@ public class Facility {
 	public void setFacilityName(String facilityName) {
 		this.facilityName = facilityName;
 	}
+
+	@Override
+	public String toString() {
+		return "Facility [facilityCode=" + facilityCode + ", facilityName=" + facilityName + "]";
+	}
 }

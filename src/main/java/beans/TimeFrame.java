@@ -38,4 +38,9 @@ public class TimeFrame {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+
+	@Override
+	public String toString() {
+		return "TimeFrame [timeFrameCode=" + timeFrameCode + ", startTime=" + startTime + ", endTime=" + endTime + "]";
+	}
 }

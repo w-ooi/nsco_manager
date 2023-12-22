@@ -28,4 +28,10 @@ public class LessonCategory {
 	public void setLessonCategoryName(String lessonCategoryName) {
 		this.lessonCategoryName = lessonCategoryName;
 	}
+
+	@Override
+	public String toString() {
+		return "LessonCategory [lessonCategoryCode=" + lessonCategoryCode + ", lessonCategoryName=" + lessonCategoryName
+				+ "]";
+	}
 }

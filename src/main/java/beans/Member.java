@@ -119,4 +119,11 @@ public class Member {
 	public void setCreacaExpiration(String creacaExpiration) {
 		this.creacaExpiration = creacaExpiration;
 	}
+
+	@Override
+	public String toString() {
+		return "Member [memberNo=" + memberNo + ", nameSei=" + nameSei + ", nameMei=" + nameMei + ", kanaSei=" + kanaSei
+				+ ", kanaMei=" + kanaMei + ", email=" + email + ", nickname=" + nickname + ", password=" + password
+				+ ", creca=" + creca + ", crecaNo=" + crecaNo + ", creacaExpiration=" + creacaExpiration + "]";
+	}
 }

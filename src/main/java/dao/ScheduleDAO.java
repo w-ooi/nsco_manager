@@ -473,7 +473,6 @@ public class ScheduleDAO {
 			// SQL文を発行
 			ResultSet rs = st.executeQuery();
 
-			MemberDAO memberDao = new MemberDAO(con);
 			CrecaDAO crecaDao = new CrecaDAO(con);
 			
 			subSt = con.prepareStatement("SELECT * FROM member WHERE member_no=?");

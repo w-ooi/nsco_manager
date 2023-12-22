@@ -89,4 +89,11 @@ public class Schedule {
 	public void setCancelFlag(int cancelFlag) {
 		this.cancelFlag = cancelFlag;
 	}
+
+	@Override
+	public String toString() {
+		return "Schedule [scheduleCode=" + scheduleCode + ", lesson=" + lesson + ", eventDate=" + eventDate
+				+ ", timeFrame=" + timeFrame + ", instructor=" + instructor + ", streamingId=" + streamingId
+				+ ", streamingPass=" + streamingPass + ", cancelFlag=" + cancelFlag + "]";
+	}
 }

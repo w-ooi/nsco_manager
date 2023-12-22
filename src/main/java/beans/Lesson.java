@@ -48,4 +48,10 @@ public class Lesson {
 	public void setLessonCategory(LessonCategory lessonCategory) {
 		this.lessonCategory = lessonCategory;
 	}
+
+	@Override
+	public String toString() {
+		return "Lesson [lessonCode=" + lessonCode + ", lessonName=" + lessonName + ", description=" + description
+				+ ", lessonCategory=" + lessonCategory + "]";
+	}
 }
