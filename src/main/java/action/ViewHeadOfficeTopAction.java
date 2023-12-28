@@ -13,6 +13,8 @@ public class ViewHeadOfficeTopAction implements IAction {
 		HttpSession session = request.getSession(); 
 		session.removeAttribute("scheduleList");
 		session.removeAttribute("registrationSchedule");
+		session.removeAttribute("updateSchedule");
+		session.removeAttribute("schedule");
 		
 		return "headOfficeTop.jsp";
 	}

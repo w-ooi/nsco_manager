@@ -24,6 +24,12 @@
 </form>
 <form action="mfc" method="post">
 <table style="margin:auto;border:1px solid;">
+<tr><th style="width:200px;"><input type="submit" value="スケジュール更新・削除"></th></tr>
+<tr><th style="width:200px;"><input type="hidden" name="visit" value="updateScheduleSearchPage"></th></tr>
+</table>
+</form>
+<form action="mfc" method="post">
+<table style="margin:auto;border:1px solid;">
 <tr><th style="width:200px;"><input type="submit" value="CSV出力"></th></tr>
 <tr><th style="width:200px;"><input type="hidden" name="visit" value="outputCsvPage"></th></tr>
 </table>

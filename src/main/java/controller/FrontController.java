@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import action.AuthenticationLoginAction;
 import action.CheckQuestionAction;
 import action.ConfirmRegistrationScheduleAction;
+import action.ConfirmUpdateScheduleAction;
 import action.IAction;
 import action.LogoutAction;
 import action.OutputCsvAction;
@@ -20,12 +21,15 @@ import action.RegistrationScheduleAction;
 import action.ScheduleSearchByInstructorAction;
 import action.ScheduleSearchByLessonCategoryAction;
 import action.ScheduleSearchByTimeFrameAction;
+import action.UpdateScheduleAction;
 import action.ViewBranchOfficeTopAction;
 import action.ViewCheckQuestionPageAction;
 import action.ViewHeadOfficeTopAction;
 import action.ViewOutputCsvPageAction;
 import action.ViewRegistrationAttendancePageAction;
 import action.ViewRegistrationSchedulePageAction;
+import action.ViewUpdateSchedulePageAction;
+import action.ViewUpdateScheduleSearchPageAction;
 import orgex.NSCOException;
 
 @WebServlet("/mfc")
@@ -61,6 +65,18 @@ public class FrontController extends HttpServlet {
 			break;
 		case "confirmRegistrationSchedule":
 			action = new ConfirmRegistrationScheduleAction();
+			break;
+		case "updateScheduleSearchPage":
+			action = new ViewUpdateScheduleSearchPageAction();
+			break;
+		case "updateSchedulePage":
+			action = new ViewUpdateSchedulePageAction();
+			break;
+		case "updateSchedule":
+			action = new UpdateScheduleAction();
+			break;
+		case "confirmUpdateSchedule":
+			action = new ConfirmUpdateScheduleAction();
 			break;
 		case "outputCsvPage":
 			action = new ViewOutputCsvPageAction();

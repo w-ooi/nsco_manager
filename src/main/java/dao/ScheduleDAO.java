@@ -111,12 +111,12 @@ public class ScheduleDAO {
 
 		if(!code.equals("all")) {
 			// PreparedStatementの取得
-			st = con.prepareStatement("SELECT schedule_code,s.lesson_code,event_date,time_frame_code,instructor_code,streaming_id,streaming_pass,cancel_flag,lesson_category_code FROM schedule s INNER JOIN lesson l ON s.lesson_code=l.lesson_code WHERE l.lesson_category_code=? AND event_date>=? AND event_date<? ORDER BY event_date,time_frame_code");
+			st = con.prepareStatement("SELECT schedule_code,s.lesson_code,event_date,time_frame_code,instructor_code,streaming_id,streaming_pass,cancel_flag,lesson_category_code FROM schedule s INNER JOIN lesson l ON s.lesson_code=l.lesson_code WHERE l.lesson_category_code=? AND event_date>=? AND event_date<? AND cancel_flag=0 ORDER BY event_date,time_frame_code");
 			st.setString(1, code);
 			st.setDate(2, new java.sql.Date(compDate[0].getTime().getTime()));
 			st.setDate(3, new java.sql.Date(compDate[1].getTime().getTime()));
 		}else {
-			st = con.prepareStatement("SELECT * FROM schedule WHERE event_date>=? AND event_date<? ORDER BY event_date,time_frame_code");
+			st = con.prepareStatement("SELECT * FROM schedule WHERE event_date>=? AND event_date<? AND cancel_flag=0 ORDER BY event_date,time_frame_code");
 			st.setDate(1, new java.sql.Date(compDate[0].getTime().getTime()));
 			st.setDate(2, new java.sql.Date(compDate[1].getTime().getTime()));
 		}
@@ -162,7 +162,7 @@ public class ScheduleDAO {
 				int iCode = Integer.parseInt(code);
 
 				// PreparedStatementの取得
-				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND event_date>=? AND event_date<? AND time_frame_code=? ORDER BY event_date,time_frame_code");
+				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND event_date>=? AND event_date<? AND time_frame_code=? AND cancel_flag=0 ORDER BY event_date,time_frame_code");
 				
 				st.setDate(1, java.sql.Date.valueOf(strDate));
 				st.setDate(2, new java.sql.Date(compDate[0].getTime().getTime()));
@@ -170,7 +170,7 @@ public class ScheduleDAO {
 				st.setInt(4, iCode);
 			}else {
 				// PreparedStatementの取得
-				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND event_date>=? AND event_date<? ORDER BY event_date,time_frame_code");
+				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND event_date>=? AND event_date<? AND cancel_flag=0 ORDER BY event_date,time_frame_code");
 				
 				st.setDate(1, java.sql.Date.valueOf(strDate));
 				st.setDate(2, new java.sql.Date(compDate[0].getTime().getTime()));
@@ -224,12 +224,12 @@ public class ScheduleDAO {
 				int iCode = Integer.parseInt(code);
 
 				// PreparedStatementの取得
-				st = con.prepareStatement("SELECT * FROM schedule WHERE instructor_code=? AND event_date>=? AND event_date<? ORDER BY event_date,time_frame_code");
+				st = con.prepareStatement("SELECT * FROM schedule WHERE instructor_code=? AND event_date>=? AND event_date<? AND cancel_flag=0 ORDER BY event_date,time_frame_code");
 				st.setInt(1, iCode);
 				st.setDate(2, new java.sql.Date(compDate[0].getTime().getTime()));
 				st.setDate(3, new java.sql.Date(compDate[1].getTime().getTime()));
 			}else {
-				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date>=? AND event_date<? ORDER BY event_date,time_frame_code");
+				st = con.prepareStatement("SELECT * FROM schedule WHERE event_date>=? AND event_date<? AND cancel_flag=0 ORDER BY event_date,time_frame_code");
 				st.setDate(1, new java.sql.Date(compDate[0].getTime().getTime()));
 				st.setDate(2, new java.sql.Date(compDate[1].getTime().getTime()));
 			}
@@ -410,7 +410,7 @@ public class ScheduleDAO {
 
 		try {
 			// PreparedStatementの取得
-			st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND time_frame_code=? AND instructor_code=?");
+			st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND time_frame_code=? AND instructor_code=? AND cancel_flag=0");
 			st.setDate(1, java.sql.Date.valueOf(eventDate));
 			st.setInt(2, timeFrameCode);
 			st.setInt(3, instructorCode);
@@ -498,7 +498,7 @@ public class ScheduleDAO {
 
 		try {
 			// PreparedStatementの取得
-			st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? ORDER BY time_frame_code");
+			st = con.prepareStatement("SELECT * FROM schedule WHERE event_date=? AND cancel_flag=0 ORDER BY time_frame_code");
 			
 			// 現在日の取得
 			Calendar calendar = Calendar.getInstance();
@@ -539,5 +539,33 @@ public class ScheduleDAO {
 
 		// リストを返却
 		return list;
+	}
+
+	public int updateSchedule(Schedule schedule) throws SQLException  {
+		int intResult = 0;
+		PreparedStatement st = null;
+
+		try {
+			// PreparedStatementの取得
+			st = con.prepareStatement("UPDATE schedule SET lesson_code=?,event_date=?,time_frame_code=?,instructor_code=?,streaming_id=?,streaming_pass=?,cancel_flag=? WHERE schedule_code=?");
+			st.setInt(1, schedule.getLesson().getLessonCode());
+			st.setDate(2, java.sql.Date.valueOf(schedule.getEventDate()));
+			st.setInt(3, schedule.getTimeFrame().getTimeFrameCode());
+			st.setInt(4, schedule.getInstructor().getInstructorCode());
+			st.setString(5, schedule.getStreamingId());
+			st.setString(6, schedule.getStreamingPass());
+			st.setInt(7, schedule.getCancelFlag());
+			st.setInt(8, schedule.getScheduleCode());
+
+			// SQL文を発行
+			intResult = st.executeUpdate();
+		} finally {
+			// リソースの解放
+			if (st != null) {
+				st.close();
+			}
+		}
+		
+		return intResult;
 	}
 }

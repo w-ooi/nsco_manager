@@ -46,8 +46,6 @@ public class ViewOutputCsvPageAction implements IAction {
 			session.setAttribute("instructorList", instructorList);
 			session.setAttribute("timeFrameList", timeFrameList);
 			
-			session.removeAttribute("registrationMember");
-			
 			nextPage = "outputCsv.jsp";
 		}catch (SQLException e) {
 			throw new NSCOException(e.getMessage());
